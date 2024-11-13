@@ -141,9 +141,16 @@ SMALL_RNA=$(echo 'TGGAATTCTCGGGTGCCAAGG')
 Nextera=$(echo 'CTGTCTCTTATACACATCT')
 
 # Command
+
+# For Nextflex v3
 # --trim3p 4
 # --minlength default 15
-AdapterRemoval --threads "${OMP_NUM_THREADS}" --trim3p 4 --trim5p 4 --minlength 10 --file1 "${INPUT1}" --basename "${PREFIX}" --adapter1 "${SMALL_RNA}" --output1 "${TRIMMED1}"
+# AdapterRemoval --threads "${OMP_NUM_THREADS}" --trim3p 4 --trim5p 4 --minlength 10 --file1 "${INPUT1}" --basename "${PREFIX}" --adapter1 "${SMALL_RNA}" --output1 "${TRIMMED1}"
+
+
+# For Nextflex V4
+AdapterRemoval --threads "${OMP_NUM_THREADS}" --file1 "${RAW_FASTQ_FILE}" --basename "${NAME}" \
+--gzip --minlength 16 --adapter1 "${SMALL_RNA}"
 
 END_SUBPROCESS=$(date +%s)
 RUNTIME_SUBPROCESS=$((END_SUBPROCESS-START_SUBPROCESS))
