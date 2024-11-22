@@ -37,6 +37,9 @@ MEM=$((${SLURM_MEM_PER_NODE}/1024)) # Memory in GB
 MEM=$((9*${MEM}/10)) # Leave 19 GB ram aside of the available RAM
 MEM_PER_THREAD=$((${MEM}/${SLURM_CPUS_PER_TASK}))
 
+echo "${MEM} G max total mem"
+echo "${MEM_PER_THREAD} G max mem per thread"
+
 ## Read optional arguments
 function usage {
   echo -e "\n Usage:$(basename $0) -g <genome>  <input_files>"
@@ -70,6 +73,8 @@ if [ -z "${GENOME}" ]; then
   exit 1
 fi
 
+echo "Using genome setup: ${GENOME}"
+
 # PATH to the reference genomes
 if [ "${GENOME}" == "mm10" ]; then
 	REFERENCE=/work/References/Mouse/mm10/bowtie1.3.1/mm10
@@ -82,7 +87,7 @@ elif [ "${GENOME}" == "mm39" ]; then
   MIRNA_MATURE=/work/References/mirbase/RELEASE_22.1/mature_mmu.fa
 
 elif [ "${GENOME}" == "hg38" ]; then
-  REFERENCE=/work/References/Human/hg38_analysisSet/bowtie1.3.1/
+  REFERENCE=/work/References/Human/hg38_analysisSet/bowtie1.3.1/hg38.analysisSet
   MIRNA_PRECURSOR=/work/References/mirbase/RELEASE_22.1/premature_hsa_hg38.fa
   MIRNA_MATURE=/work/References/mirbase/RELEASE_22.1/mature_hsa.fa
 
@@ -141,9 +146,13 @@ SMALL_RNA=$(echo 'TGGAATTCTCGGGTGCCAAGG')
 Nextera=$(echo 'CTGTCTCTTATACACATCT')
 
 # Command
+# For Nextflex V3
 # --trim3p 4
 # --minlength default 15
-AdapterRemoval --threads "${OMP_NUM_THREADS}" --trim3p 4 --trim5p 4 --minlength 10 --file1 "${INPUT1}" --basename "${PREFIX}" --adapter1 "${SMALL_RNA}" --output1 "${TRIMMED1}"
+# AdapterRemoval --threads "${OMP_NUM_THREADS}" --trim3p 4 --trim5p 4 --minlength 10 --file1 "${INPUT1}" --basename "${PREFIX}" --adapter1 "${SMALL_RNA}" --output1 "${TRIMMED1}"
+
+# For Nextflex V4
+AdapterRemoval --threads "${OMP_NUM_THREADS}" --file1 "${INPUT1}" --basename "${PREFIX}" --minlength 16 --adapter1 "${SMALL_RNA}" --output1 "${TRIMMED1}"
 
 END_SUBPROCESS=$(date +%s)
 RUNTIME_SUBPROCESS=$((END_SUBPROCESS-START_SUBPROCESS))

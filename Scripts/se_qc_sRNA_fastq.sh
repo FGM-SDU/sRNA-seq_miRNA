@@ -216,6 +216,8 @@ START_SUBPROCESS=$(date +%s)
 # For Nextflex V4
 java -jar $EBROOTMIRTRACE/mirtrace.jar qc -t "${OMP_NUM_THREADS}" --species "${GENOME}" --adapter "${SMALL_RNA}" -o "${NAME}" -w --title "${NAME}" "${RAW_FASTQ_FILE}"
 
+echo "EBROOTMIRTRACE is set to: $EBROOTMIRTRACE"
+
 END_SUBPROCESS=$(date +%s)
 RUNTIME_SUBPROCESS=$((END_SUBPROCESS-START_SUBPROCESS))
 H=$((RUNTIME_SUBPROCESS / 3600 ))  # Calculate hours
